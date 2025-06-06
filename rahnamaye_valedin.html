@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<!-- Chosen Palette: Calm Indigo & Supporting Neutrals -->
+<!-- Application Structure Plan: A single-page, scrollable application featuring an introductory section, a core concept highlight, and a main interactive grid of five clickable "guideline" cards. Clicking a card reveals detailed advice, promoting focused exploration. A Chart.js doughnut chart is included to visually represent an ideal daily activity balance, reinforcing the report's message. A new "Games" section is added with a button to dynamically load new simple attention games. This card-based and interactive game structure was chosen to break down information into manageable, interactive chunks and provide practical, engaging activities for children and parents, making it more engaging and less overwhelming than a static text document for busy parents. -->
+<!-- Visualization & Content Choices: 1. Guideline Cards: Report Info -> 5 Parent Guidelines. Goal -> Organize & Inform. Viz -> Interactive HTML/CSS Cards. Interaction -> Click to reveal details. Justification -> Encourages active discovery over passive reading. Library -> Vanilla JS & Tailwind. 2. Activity Balance Chart: Report Info -> Implied need for balance from "reduce screen time" and "ensure sleep" points. Goal -> Inform & Compare. Viz -> Doughnut Chart. Interaction -> Hover to see details. Justification -> Provides a quick, visual, and memorable data-driven anchor for a balanced lifestyle. Library -> Chart.js. 3. Simple Focus Games: Report Info -> Need for practical attention exercises. Goal -> Engage & Train. Viz -> Dynamic HTML/JS games (Stroop, Odd One Out, Quick Count). Interaction -> Button click to load new game, in-game interaction for feedback. Justification -> Offers direct, repeatable engagement to practice attention skills without external resources. Library -> Vanilla JS & Tailwind. -->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>راهنمای والدین برای قهرمانان حواس جمع</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .guideline-card .details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, padding 0.5s ease-out;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+        .guideline-card.active .details {
+            max-height: 500px;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            transition: max-height 0.7s ease-in, padding 0.7s ease-in;
+        }
+        .guideline-card.active .icon-arrow {
+            transform: rotate(180deg);
+        }
+        .icon-arrow {
+            transition: transform 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="container mx-auto px-4 py-8 md:py-12">
+
+        <!-- Header Section -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-indigo-700 mb-2">🌟 راهنمای والدین برای قهرمانان حواس جمع 🌟</h1>
+            <p class="text-lg text-slate-600">همکاری خانه و مدرسه برای تقویت توجه و تمرکز کودکان</p>
+        </header>
+
+        <!-- Core Concept Section -->
+        <section class="bg-indigo-100 border-r-4 border-indigo-500 rounded-lg p-6 mb-12 max-w-4xl mx-auto">
+            <h2 class="text-2xl font-bold text-indigo-800 mb-3">🧠 توجه و تمرکز: مهارتی که نیاز به تمرین و تکرار دارد!</h2>
+            <p class="text-slate-700 leading-relaxed">
+                همانند هر مهارت دیگری، **توجه و تمرکز** نیز با **تمرین و تکرار مداوم** تقویت می‌شود. این کارگاه ۱۰ جلسه‌ای، بستری را فراهم می‌کند تا فرزندان شما با بازی‌ها و فعالیت‌های هدفمند، ابزارهای لازم برای مدیریت حواس و تمرکز خود را بیاموزند. اما تاثیر این تمرینات، نیازمند **همراهی و تداوم** در محیط خانه نیز هست. همکاری شما والدین محترم، نقش کلیدی در ماندگاری و تعمیم این مهارت‌ها به زندگی روزمره فرزندانتان خواهد داشت.
+            </p>
+        </section>
+
+        <!-- Interactive Guidelines Section -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-center mb-8 text-slate-800">🏡 راهنمایی‌های کلیدی برای شما</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto" id="guidelines-container">
+
+                <!-- Guideline Card 1: Calm Environment -->
+                <div class="guideline-card bg-white rounded-xl shadow-md cursor-pointer hover:shadow-lg transition-shadow duration-300">
+                    <div class="p-5 flex justify-between items-center">
+                        <h3 class="text-xl font-semibold text-indigo-700">ایجاد محیط آرام در خانه</h3>
+                        <span class="text-3xl icon-arrow">🤫</span>
+                    </div>
+                    <div class="details px-5 text-slate-600 border-t border-slate-200">
+                        <p>فضایی آرام و دور از شلوغی و عوامل حواس‌پرتی (مانند صدای زیاد تلویزیون یا رفت‌وآمد مکرر) را فراهم کنید، به خصوص در زمان انجام تکالیف یا فعالیت‌های نیازمند تمرکز.</p>
+                    </div>
+                </div>
+
+                <!-- Guideline Card 2: Daily Practice -->
+                <div class="guideline-card bg-white rounded-xl shadow-md cursor-pointer hover:shadow-lg transition-shadow duration-300">
+                    <div class="p-5 flex justify-between items-center">
+                        <h3 class="text-xl font-semibold text-indigo-700">تشویق به تمرینات روزانه</h3>
+                        <span class="text-3xl icon-arrow">✨</span>
+                    </div>
+                    <div class="details px-5 text-slate-600 border-t border-slate-200">
+                        <p>فرزند خود را تشویق کنید که تمرینات ساده‌ای را که در کارگاه یاد می‌گیرد (مثلاً تمرینات تنفس یا بازی‌های فکری ساده)، در خانه نیز به صورت منظم انجام دهد. حتی چند دقیقه تمرین روزانه نیز می‌تواند بسیار مؤثر باشد.</p>
+                    </div>
+                </div>
+                
+                <!-- Guideline Card 3: Patience -->
+                <div class="guideline-card bg-white rounded-xl shadow-md cursor-pointer hover:shadow-lg transition-shadow duration-300">
+                    <div class="p-5 flex justify-between items-center">
+                        <h3 class="text-xl font-semibold text-indigo-700">صبوری و حمایت مثبت</h3>
+                        <span class="text-3xl icon-arrow">❤️</span>
+                    </div>
+                    <div class="details px-5 text-slate-600 border-t border-slate-200">
+                        <p>در طول این مسیر، صبور باشید. پیشرفت در توجه و تمرکز نیازمند زمان است. هر گام کوچک فرزندتان را تشویق کنید و به او احساس توانمندی بدهید. از مقایسه با دیگران پرهیز کنید.</p>
+                    </div>
+                </div>
+
+                <!-- Guideline Card 4: Screen Time -->
+                <div class="guideline-card bg-white rounded-xl shadow-md cursor-pointer hover:shadow-lg transition-shadow duration-300">
+                    <div class="p-5 flex justify-between items-center">
+                        <h3 class="text-xl font-semibold text-indigo-700">کاهش زمان استفاده از فضای مجازی</h3>
+                        <span class="text-3xl icon-arrow">📱</span>
+                    </div>
+                    <div class="details px-5 text-slate-600 border-t border-slate-200">
+                        <p class="mb-3">**لطفاً استفاده فرزندانتان از دستگاه‌های الکترونیکی و فضای مجازی (موبایل، تبلت، تلویزیون، بازی‌های ویدئویی) را به حداقل برسانید.** تحقیقات نشان می‌دهد که استفاده بیش از حد از این وسایل می‌تواند تأثیر منفی بر دامنه توجه و توانایی تمرکز کودکان داشته باشد.</p>
+                        <p class="font-semibold mb-2">جایگزین‌های پیشنهادی:</p>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>مطالعه کتاب 📚</li>
+                            <li>بازی‌های رومیزی 🎲</li>
+                            <li>فعالیت‌های هنری 🎨</li>
+                            <li>ورزش و بازی‌های فیزیکی ⚽</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Guideline Card 5: Sleep & Nutrition -->
+                <div class="guideline-card bg-white rounded-xl shadow-md cursor-pointer hover:shadow-lg transition-shadow duration-300">
+                    <div class="p-5 flex justify-between items-center">
+                        <h3 class="text-xl font-semibold text-indigo-700">خواب کافی و تغذیه مناسب</h3>
+                        <span class="text-3xl icon-arrow">😴</span>
+                    </div>
+                    <div class="details px-5 text-slate-600 border-t border-slate-200">
+                        <p>مطمئن شوید فرزندتان به اندازه کافی می‌خوابد و تغذیه‌ای سالم و متعادل دارد. این دو عامل نقش حیاتی در عملکرد مغز و توانایی تمرکز دارند.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Visualization Section -->
+        <section class="mb-12">
+             <h2 class="text-3xl font-bold text-center mb-8 text-slate-800">📊 توازن ایده‌آل روزانه یک قهرمان</h2>
+             <div class="bg-white p-6 rounded-xl shadow-lg max-w-2xl mx-auto">
+                <div class="chart-container relative h-80 md:h-96 w-full mx-auto max-w-lg">
+                    <canvas id="activityBalanceChart"></canvas>
+                </div>
+             </div>
+        </section>
+
+        <!-- Game Section -->
+        <section class="mb-12 pt-8 border-t border-slate-200">
+            <h2 class="text-3xl font-bold text-center mb-8 text-slate-800">🎮 بازی‌های تمرکز و توجه برای قهرمانان کوچک 🎮</h2>
+            <p class="text-center text-slate-600 mb-6">
+                اینجا می‌تونید با بازی‌های ساده و سرگرم‌کننده، حواس‌جمع بودن رو تمرین کنید. هر بار که روی دکمه کلیک می‌کنید، یک بازی جدید ظاهر میشه!
+            </p>
+
+            <div class="flex justify-center mb-6">
+                <button id="newGameButton" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    بازی جدید ✨
+                </button>
+            </div>
+
+            <div id="gameContainer" class="bg-white p-6 rounded-xl shadow-lg max-w-md mx-auto min-h-[200px] flex items-center justify-center text-center text-slate-700 text-xl">
+                برای شروع، روی "بازی جدید" کلیک کنید!
+            </div>
+        </section>
+
+
+        <!-- Closing Section -->
+        <footer class="text-center pt-8 border-t border-slate-200">
+            <p class="text-lg text-slate-700 mb-4">ما متعهدیم که با بهترین و جذاب‌ترین روش‌ها، مهارت‌های توجه و تمرکز را در فرزندان شما تقویت کنیم. با یاری و همکاری شما، می‌توانیم آینده‌ای روشن‌تر و متمرکزتر برای قهرمانان کوچکمان بسازیم.</p>
+            <p class="font-semibold text-indigo-800">حمیده شریفی</p>
+            <p class="text-slate-500">مشاور دوره اول</p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const guidelineCards = document.querySelectorAll('.guideline-card');
+
+            guidelineCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    guidelineCards.forEach(otherCard => {
+                        if (otherCard !== card && otherCard.classList.contains('active')) {
+                            otherCard.classList.remove('active');
+                        }
+                    });
+                    card.classList.toggle('active');
+                });
+            });
+
+            const ctx = document.getElementById('activityBalanceChart').getContext('2d');
+            const activityBalanceChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['خواب', 'مدرسه و تکالیف', 'بازی و ورزش', 'زمان خلاقیت', 'وعده‌های غذایی', 'زمان نمایشگر (حداکثر)'],
+                    datasets: [{
+                        label: 'ساعات پیشنهادی در روز',
+                        data: [10, 5, 2, 2, 2, 1],
+                        backgroundColor: [
+                            'rgba(88, 80, 236, 0.8)',
+                            'rgba(129, 140, 248, 0.8)',
+                            'rgba(20, 184, 166, 0.8)',
+                            'rgba(245, 158, 11, 0.8)',
+                            'rgba(59, 130, 246, 0.8)',
+                            'rgba(239, 68, 68, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 255, 255, 1)'
+                        ],
+                        borderWidth: 3,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    family: 'Vazirmatn',
+                                    size: 14
+                                },
+                                color: '#334155'
+                            }
+                        },
+                        tooltip: {
+                            bodyFont: {
+                                family: 'Vazirmatn'
+                            },
+                            titleFont: {
+                                family: 'Vazirmatn'
+                            },
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += context.parsed + ' ساعت';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    cutout: '60%'
+                }
+            });
+
+            const games = [
+                {
+                    id: 'stroop',
+                    title: 'بازی رنگ و کلمه',
+                    description: 'کلمه زیر را بخوانید و بگویید **رنگ واقعی کلمه** چیست.',
+                    content: `
+                        <div class="text-4xl font-bold mb-4" id="stroopWord"></div>
+                        <div class="flex flex-wrap justify-center space-x-2 md:space-x-4">
+                            <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg m-2 stroop-btn" data-answer="آبی">آبی</button>
+                            <button class="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg m-2 stroop-btn" data-answer="قرمز">قرمز</button>
+                            <button class="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-lg m-2 stroop-btn" data-answer="سبز">سبز</button>
+                            <button class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-4 py-2 rounded-lg m-2 stroop-btn" data-answer="زرد">زرد</button>
+                        </div>
+                        <p id="stroopFeedback" class="mt-4 text-lg font-semibold"></p>
+                    `,
+                    setup: function(containerId) {
+                        const colors = [
+                            { word: 'قرمز', displayColor: 'blue', hex: '#3B82F6' },
+                            { word: 'آبی', displayColor: 'red', hex: '#EF4444' },
+                            { word: 'سبز', displayColor: 'purple', hex: '#A855F7' },
+                            { word: 'زرد', displayColor: 'green', hex: '#22C55E' }
+                        ];
+                        const randomIndex = Math.floor(Math.random() * colors.length);
+                        const chosenColor = colors[randomIndex];
+
+                        const stroopWordElement = document.getElementById('stroopWord');
+                        stroopWordElement.textContent = chosenColor.word;
+                        stroopWordElement.style.color = chosenColor.hex;
+
+                        const buttons = document.querySelectorAll(`#${containerId} .stroop-btn`);
+                        const feedbackElement = document.getElementById('stroopFeedback');
+                        feedbackElement.textContent = ''; // Clear previous feedback
+
+                        buttons.forEach(button => {
+                            button.onclick = () => {
+                                if (button.dataset.answer === chosenColor.word) {
+                                    feedbackElement.textContent = 'درست بود! قهرمان حواس جمع! 🎉';
+                                    feedbackElement.className = 'mt-4 text-lg font-semibold text-green-600';
+                                } else {
+                                    feedbackElement.textContent = 'نزدیک بود! دوباره امتحان کن. 🤔';
+                                    feedbackElement.className = 'mt-4 text-lg font-semibold text-red-600';
+                                }
+                            };
+                        });
+                    }
+                },
+                {
+                    id: 'oddOneOut',
+                    title: 'پیدا کردن متفاوت',
+                    description: 'روی شکل متفاوتی که در بین بقیه پنهان شده کلیک کنید!',
+                    content: `
+                        <div class="grid grid-cols-4 gap-2 text-3xl mb-4 max-w-xs mx-auto" id="oddOneOutGrid"></div>
+                        <p id="oddOneOutFeedback" class="mt-4 text-lg font-semibold"></p>
+                    `,
+                    setup: function(containerId) {
+                        const commonEmoji = '🍎';
+                        const oddEmoji = '🍏';
+                        const totalEmojis = 16;
+                        const emojis = Array(totalEmojis - 1).fill(commonEmoji);
+                        const randomIndex = Math.floor(Math.random() * totalEmojis);
+                        emojis.splice(randomIndex, 0, oddEmoji);
+                        
+                        const oddOneOutGrid = document.getElementById('oddOneOutGrid');
+                        const feedbackElement = document.getElementById('oddOneOutFeedback');
+                        oddOneOutGrid.innerHTML = '';
+                        feedbackElement.textContent = '';
+
+                        emojis.forEach((emoji, index) => {
+                            const span = document.createElement('span');
+                            span.textContent = emoji;
+                            span.className = 'flex items-center justify-center p-2 rounded-md hover:bg-slate-100 cursor-pointer transition-colors duration-200';
+                            span.dataset.index = index;
+                            oddOneOutGrid.appendChild(span);
+
+                            span.onclick = () => {
+                                if (parseInt(span.dataset.index) === randomIndex) {
+                                    feedbackElement.textContent = 'درست بود! قهرمان حواس جمع! 🎉';
+                                    feedbackElement.className = 'mt-4 text-lg font-semibold text-green-600';
+                                } else {
+                                    feedbackElement.textContent = 'نزدیک بود! دوباره امتحان کن. 🤔';
+                                    feedbackElement.className = 'mt-4 text-lg font-semibold text-red-600';
+                                }
+                            };
+                        });
+                    }
+                },
+                {
+                    id: 'quickCount',
+                    title: 'شمارش سریع',
+                    description: 'در کمتر از 5 ثانیه بگویید چند تا ستاره ⭐ وجود دارد؟',
+                    content: `
+                        <div class="text-4xl mb-4 leading-relaxed flex flex-wrap justify-center" id="countObjectsDisplay"></div>
+                        <input type="number" id="countInput" class="w-24 p-2 border rounded text-center text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200" placeholder="عدد" />
+                        <button id="checkCountButton" class="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-4 py-2 rounded-lg mt-4 shadow-md transition duration-300 transform hover:scale-105">بررسی</button>
+                        <p id="countFeedback" class="mt-4 text-lg font-semibold"></p>
+                    `,
+                    setup: function(containerId) {
+                        const targetEmoji = '⭐';
+                        const otherEmoji = '✨';
+                        const numStars = Math.floor(Math.random() * 5) + 3;
+                        const totalEmojis = 20;
+                        const emojis = Array(totalEmojis - numStars).fill(otherEmoji);
+                        for (let i = 0; i < numStars; i++) {
+                            emojis.push(targetEmoji);
+                        }
+                        emojis.sort(() => Math.random() - 0.5);
+
+                        const displayElement = document.getElementById('countObjectsDisplay');
+                        const inputElement = document.getElementById('countInput');
+                        const checkButton = document.getElementById('checkCountButton');
+                        const feedbackElement = document.getElementById('countFeedback');
+
+                        displayElement.textContent = emojis.join('');
+                        inputElement.value = '';
+                        feedbackElement.textContent = '';
+                        inputElement.disabled = false;
+                        checkButton.disabled = false;
+
+                        let timer = setTimeout(() => {
+                            if (feedbackElement.textContent === '') { // Only show timeout if not already answered
+                                feedbackElement.textContent = 'زمان تمام شد! 🤔';
+                                feedbackElement.className = 'mt-4 text-lg font-semibold text-red-600';
+                                checkButton.disabled = true;
+                                inputElement.disabled = true;
+                            }
+                        }, 5000);
+
+                        checkButton.onclick = () => {
+                            clearTimeout(timer);
+                            checkButton.disabled = true;
+                            inputElement.disabled = true;
+                            if (parseInt(inputElement.value) === numStars) {
+                                feedbackElement.textContent = 'درست بود! قهرمان حواس جمع! 🎉';
+                                feedbackElement.className = 'mt-4 text-lg font-semibold text-green-600';
+                            } else {
+                                feedbackElement.textContent = `نزدیک بود! تعداد درست ${numStars} بود. 🤔`;
+                                feedbackElement.className = 'mt-4 text-lg font-semibold text-red-600';
+                            }
+                        };
+                    }
+                }
+            ];
+
+            let currentGameIndex = -1;
+
+            function loadGame() {
+                const gameContainer = document.getElementById('gameContainer');
+                let nextGameIndex;
+                do {
+                    nextGameIndex = Math.floor(Math.random() * games.length);
+                } while (nextGameIndex === currentGameIndex);
+                currentGameIndex = nextGameIndex;
+
+                const game = games[currentGameIndex];
+                
+                gameContainer.innerHTML = `
+                    <div class="w-full flex flex-col items-center">
+                        <h3 class="text-2xl font-semibold text-indigo-700 mb-3">${game.title}</h3>
+                        <p class="text-base text-slate-600 mb-6">${game.description}</p>
+                        ${game.content}
+                    </div>
+                `;
+
+                game.setup('gameContainer');
+            }
+
+            document.getElementById('newGameButton').addEventListener('click', loadGame);
+
+            document.getElementById('gameContainer').innerHTML = `
+                <div class="text-xl text-slate-700">
+                    برای شروع، روی "بازی جدید" کلیک کنید!
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
